@@ -1,0 +1,13 @@
+### Registration
+POST localhost:8080/auth/registration
+Content-Type: application/json
+
+{
+  "name": "Khamid",
+  "username": "gaipovkhamid.uz@gmail.com",
+  "password": "Khamid001"
+}
+
+
+### Verification
+GET localhost:8080/auth/registration/verification/{id}
