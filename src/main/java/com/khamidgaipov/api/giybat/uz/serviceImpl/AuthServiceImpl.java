@@ -1,11 +1,15 @@
 package com.khamidgaipov.api.giybat.uz.serviceImpl;
 
+import com.khamidgaipov.api.giybat.uz.dto.AuthDto;
+import com.khamidgaipov.api.giybat.uz.dto.ProfileDto;
 import com.khamidgaipov.api.giybat.uz.dto.RegistrationDto;
 import com.khamidgaipov.api.giybat.uz.entity.ProfileEntity;
+import com.khamidgaipov.api.giybat.uz.entity.ProfileRoleEntity;
 import com.khamidgaipov.api.giybat.uz.enums.GeneralStatus;
 import com.khamidgaipov.api.giybat.uz.enums.ProfileRole;
 import com.khamidgaipov.api.giybat.uz.exception.AppBadException;
 import com.khamidgaipov.api.giybat.uz.repository.ProfileRepository;
+import com.khamidgaipov.api.giybat.uz.repository.ProfileRoleRepository;
 import com.khamidgaipov.api.giybat.uz.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +31,8 @@ public class AuthServiceImpl {
     EmailSenderServiceImpl senderService;
     @Autowired
     ProfileServiceImpl profileService;
-
+    @Autowired
+    ProfileRoleRepository profileRoleRepository;
 
     public String registration(RegistrationDto dto) {
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
@@ -68,5 +73,28 @@ public class AuthServiceImpl {
         }
 
         throw new AppBadException("Registration failed");
+    }
+
+    public ProfileDto login(AuthDto dto) {
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
+        if (optional.isEmpty()) {
+            throw new AppBadException("Username or password is wrong");
+        }
+        ProfileEntity entity = optional.get();
+        if (bc.matches(dto.getPassword(), entity.getPassword())){
+            throw new AppBadException("Username or password is wrong");
+        }
+        if (!entity.getStatus().equals(GeneralStatus.ACTIVE)){
+            throw new AppBadException("Wrong status");
+        }
+
+        ProfileDto response = new ProfileDto();
+        response.setName(entity.getName());
+        response.setUsername(entity.getUsername());
+        response.setRoleList(profileRoleRepository.getAllRolesListNyProfileId(entity.getId()));
+
+        response.setToken();
+
+        return null;
     }
 }

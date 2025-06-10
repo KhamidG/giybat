@@ -19,6 +19,9 @@ public class EmailSenderServiceImpl {
     @Value("${spring.mail.username}")
     private String fromAccount;
 
+    @Value("${server.domain}")
+    private String domain;
+
     public void sendRegistrationEmail(String email, Long profileId) {
         String subject = "Complete registered";
         String body = "<!DOCTYPE html>\n" +
@@ -46,11 +49,11 @@ public class EmailSenderServiceImpl {
                 "<p>\n" +
                 "    Please click to button for complete registration.\n" +
                 "</p>\n" +
-                "<a href=\"http://localhost:8080/auth/registration/verification/%s\" target=\"_blank\" class=\"button-link\">Click</a>\n" +
+                "<a href=\"http://%s/auth/registration/verification/%s\" target=\"_blank\" class=\"button-link\">Click</a>\n" +
                 "</body>\n" +
                 "</html>";
 
-        body = String.format(body, JwtUtil.encode(profileId));
+        body = String.format(body, domain, JwtUtil.encode(profileId));
         sendMimeMessage(email, subject, body);
     }
 
