@@ -11,3 +11,13 @@ Content-Type: application/json
 
 ### Verification
 GET localhost:8080/auth/registration/verification/{id}
+
+
+### Login
+POST localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "gaipovkhamid65@gmail.com",
+  "password": "Khamid001"
+}
