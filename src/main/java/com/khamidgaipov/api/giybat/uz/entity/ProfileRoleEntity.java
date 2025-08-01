@@ -17,7 +17,7 @@ public class ProfileRoleEntity {
     @JoinColumn(name = "profile_id")
     private ProfileEntity profile;
 
-    @Column(name = "profile_id")
+    @Column(name = "profile_id",insertable = false, updatable = false)
     private Long profileId;
 
     @Enumerated(EnumType.STRING)
