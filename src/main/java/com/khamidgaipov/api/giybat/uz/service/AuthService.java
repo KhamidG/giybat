@@ -6,14 +6,19 @@ import com.khamidgaipov.api.giybat.uz.enums.GeneralStatus;
 import com.khamidgaipov.api.giybat.uz.exps.AppBadException;
 import com.khamidgaipov.api.giybat.uz.repository.ProfileRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuthService {
     private final ProfileRepository profileRepository;
+    private final BCryptPasswordEncoder bc;
 
     public String registration(RegistrationDto dto) {
         // 1. validation
@@ -25,17 +30,20 @@ public class AuthService {
                 profileRepository.delete(profile);
                 // sms/email send
             } else {
-                throw new AppBadException("Username already exception.");
+                throw new AppBadException("Username already used.");
             }
         }
 
         ProfileEntity entity = new ProfileEntity();
         entity.setName(dto.getName());
         entity.setUsername(dto.getUsername());
-        entity.setPassword(dto.getPassword()); // TODO ""bcrypt""
-        ///  check profile status. LAST VIDEO
+        entity.setPassword(bc.encode(dto.getPassword()));
+        entity.setStatus(GeneralStatus.IN_REGISTRATION);
+        entity.setVisible(true);
+        entity.setCreatedDate(LocalDateTime.now());
+        profileRepository.save(entity);
 
-
+        log.info("Registration successfully{}", LocalDateTime.now());
         return "Successfully registered.";
     }
 }
