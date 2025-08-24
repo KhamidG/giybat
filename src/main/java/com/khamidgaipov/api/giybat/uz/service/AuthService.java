@@ -5,8 +5,8 @@ import com.khamidgaipov.api.giybat.uz.entity.ProfileEntity;
 import com.khamidgaipov.api.giybat.uz.enums.GeneralStatus;
 import com.khamidgaipov.api.giybat.uz.exps.AppBadException;
 import com.khamidgaipov.api.giybat.uz.repository.ProfileRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,24 +15,23 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class AuthService {
-    private final ProfileRepository profileRepository;
-    private final BCryptPasswordEncoder bc;
+    @Autowired
+    ProfileRepository profileRepository;
+    @Autowired
+    BCryptPasswordEncoder bc;
 
     public String registration(RegistrationDto dto) {
         // 1. validation
         // 2. check email
-        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
-        if (optional.isPresent()) {
-            ProfileEntity profile = optional.get();
-            if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
-                profileRepository.delete(profile);
-                // sms/email send
-            } else {
-                throw new AppBadException("Username already used.");
-            }
-        }
+        profileRepository.findByUsernameAndVisibleTrue(dto.getUsername())
+                .ifPresent(profileEntity -> {
+                    if (GeneralStatus.IN_REGISTRATION.equals(profileEntity.getStatus())) {
+                        throw new AppBadException("User registration is not finished yet");
+                    } else {
+                        throw new AppBadException("Username already exists");
+                    }
+                });
 
         ProfileEntity entity = new ProfileEntity();
         entity.setName(dto.getName());
@@ -43,7 +42,6 @@ public class AuthService {
         entity.setCreatedDate(LocalDateTime.now());
         profileRepository.save(entity);
 
-        log.info("Registration successfully{}", LocalDateTime.now());
         return "Successfully registered.";
     }
 }
