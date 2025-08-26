@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ProfileRepository extends CrudRepository<ProfileEntity, Long> {
     // select * from profile where username =? and visible = true;
     Optional<ProfileEntity> findByUsernameAndVisibleTrue(String username);
+
+    Optional<ProfileEntity> findByIdAndVisibleTrue(Long id);
 }
