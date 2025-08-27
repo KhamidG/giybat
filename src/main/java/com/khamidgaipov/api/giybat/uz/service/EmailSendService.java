@@ -16,7 +16,7 @@ public class EmailSendService {
 
     public void sendRegEmail(String email, Long profileId) {
         String subj = "Complete reg.";
-        String body = "Reg email. Please click to LINK: " + profileId;
+        String body = "Reg email. Please click to LINK: http://localhost:8080/auth/registration/verification/" + profileId;
         sendEmail(email, subj, body);
     }
 

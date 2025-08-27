@@ -59,7 +59,10 @@ public class AuthService {
 
     public String verification(Long profileId) {
         ProfileEntity entity = profileService.getById(profileId);
-
-        return null;
+        if (!entity.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
+            throw new AppBadException("Verification failed");
+        }
+        profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+        return "Successfully activated!";
     }
 }
