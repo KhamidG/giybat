@@ -3,7 +3,6 @@ package com.khamidgaipov.api.giybat.uz.controller;
 import com.khamidgaipov.api.giybat.uz.dto.RegistrationDto;
 import com.khamidgaipov.api.giybat.uz.service.AuthService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,9 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.registration(dto));
     }
 
-    @GetMapping("/registration/verification/{id}")
-    public ResponseEntity<String> verification(@PathVariable("id") Long profileId) {
-        return ResponseEntity.ok().body(authService.verification(profileId));
+    @GetMapping("/registration/verification/{token}")
+    public ResponseEntity<String> verification(@PathVariable("token") String token) {
+        return ResponseEntity.ok().body(authService.verification(token));
     }
 
 }
