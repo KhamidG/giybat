@@ -6,7 +6,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "profile_role")
+@Entity
+@Table(name = "profile_role")
 @Data
 public class ProfileRoleEntity {
     @Id
@@ -17,7 +18,7 @@ public class ProfileRoleEntity {
     @JoinColumn(name = "profile_id")
     private ProfileEntity profile;
 
-    @Column(name = "profile_id",insertable = false, updatable = false)
+    @Column(name = "profile_id", insertable = false, updatable = false)
     private Long profileId;
 
     @Enumerated(EnumType.STRING)

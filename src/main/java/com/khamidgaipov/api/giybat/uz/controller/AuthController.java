@@ -1,5 +1,7 @@
 package com.khamidgaipov.api.giybat.uz.controller;
 
+import com.khamidgaipov.api.giybat.uz.dto.AuthDto;
+import com.khamidgaipov.api.giybat.uz.dto.ProfileDto;
 import com.khamidgaipov.api.giybat.uz.dto.RegistrationDto;
 import com.khamidgaipov.api.giybat.uz.service.AuthService;
 import jakarta.validation.Valid;
@@ -23,4 +25,8 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.verification(token));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<ProfileDto> login(@Valid @RequestBody AuthDto dto) {
+        return ResponseEntity.ok().body(authService.login(dto));
+    }
 }

@@ -16,7 +16,7 @@ public class EmailSendService {
     private String fromAccount = "gaipovdev@mail.ru";
 
     @Value("${server.domain}")
-    private String server;
+    private String serverDomain;
 
     @Autowired
     JavaMailSender sender;
@@ -51,7 +51,7 @@ public class EmailSendService {
                 "<a href=\"%s/auth/registration/verification/%s\" target=\"_blank\" class=\"button-link\">Click</a>\n" +
                 "</body>\n" +
                 "</html>";
-        body = String.format(body, server, JwtUtil.encode(profileId));
+        body = String.format(body, serverDomain, JwtUtil.encode(profileId));
         sendMimeMessage(email, subj, body);
 //        sendEmail(email, subj, body);
     }

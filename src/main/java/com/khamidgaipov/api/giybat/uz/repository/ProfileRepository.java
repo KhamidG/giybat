@@ -3,7 +3,6 @@ package com.khamidgaipov.api.giybat.uz.repository;
 import com.khamidgaipov.api.giybat.uz.entity.ProfileEntity;
 import com.khamidgaipov.api.giybat.uz.enums.GeneralStatus;
 import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
