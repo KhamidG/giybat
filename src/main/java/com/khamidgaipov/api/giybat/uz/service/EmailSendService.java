@@ -15,6 +15,9 @@ public class EmailSendService {
     @Value("${spring.mail.username}")
     private String fromAccount = "gaipovdev@mail.ru";
 
+    @Value("${server.domain}")
+    private String server;
+
     @Autowired
     JavaMailSender sender;
 
@@ -45,10 +48,10 @@ public class EmailSendService {
                 "<p>\n" +
                 "    Please click to button for complete registration.\n" +
                 "</p>\n" +
-                "<a href=\"http://localhost:8080/auth/registration/verification/%s\" target=\"_blank\" class=\"button-link\">Click</a>\n" +
+                "<a href=\"%s/auth/registration/verification/%s\" target=\"_blank\" class=\"button-link\">Click</a>\n" +
                 "</body>\n" +
                 "</html>";
-        body = String.format(body, JwtUtil.encode(profileId));
+        body = String.format(body, server, JwtUtil.encode(profileId));
         sendMimeMessage(email, subj, body);
 //        sendEmail(email, subj, body);
     }
