@@ -1,5 +1,6 @@
 package com.khamidgaipov.api.giybat.uz.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,20 +23,19 @@ import java.util.UUID;
 @EnableWebSecurity
 public class SpringConfig {
 
+    @Autowired
+    CustomerUserDetailService customerUserDetailService;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        String password = UUID.randomUUID().toString();
-        System.out.println("User Password Mazgi: " + password);
-
-        UserDetails user = User.builder().username("user").password("{noop}" + password).roles("USER").build();
-
+    public AuthenticationProvider authenticationProvider(BCryptPasswordEncoder cryptPasswordEncoder) {
         final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(new InMemoryUserDetailsManager(user));
+        authenticationProvider.setUserDetailsService(customerUserDetailService); // ishu yedan user alish garak dab barib qoyamiz.
+        authenticationProvider.setPasswordEncoder(cryptPasswordEncoder);
         return authenticationProvider;
     }
 
