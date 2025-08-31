@@ -3,7 +3,6 @@ package com.khamidgaipov.api.giybat.uz.util;
 import com.khamidgaipov.api.giybat.uz.dto.JwtDto;
 import com.khamidgaipov.api.giybat.uz.enums.ProfileRole;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -22,7 +21,7 @@ public class JwtUtil {
         String.join(",", roleList);
 
         Map<String, String> claims = new HashMap<>();
-        claims.put("role", roleList);
+        claims.put("roles", roleList);
         return Jwts
                 .builder()
                 .subject(String.valueOf(id))
@@ -42,7 +41,7 @@ public class JwtUtil {
                 .getBody();
 
         Long id = Long.valueOf(claims.getSubject());
-        String strRoleList = (String) claims.get("role");
+        String strRoleList = (String) claims.get("roles");
 
         String[] roleArr = strRoleList.split(",");
 
