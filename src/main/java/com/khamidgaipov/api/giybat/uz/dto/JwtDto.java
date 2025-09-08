@@ -7,8 +7,14 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class JwtDto {
     private Long id;
+    private String username;
     private List<ProfileRole> roleList;
+
+    public JwtDto(Long id, String username, List<ProfileRole> roleList) {
+        this.id = id;
+        this.username = username;
+        this.roleList = roleList;
+    }
 }

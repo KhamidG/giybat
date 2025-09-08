@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class JwtUtil {
     private static final String secretKey = "veryLongSecretmazgillattayevlasharaaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
-    public static String encode(Long id, List<ProfileRole> role) {
+    public static String encode(String username, Long id, List<ProfileRole> role) {
         String roleList = role.stream()
                 .map(item -> item.name())
                 .collect(Collectors.joining(","));
@@ -22,9 +22,12 @@ public class JwtUtil {
 
         Map<String, String> claims = new HashMap<>();
         claims.put("roles", roleList);
+        claims.put("id", String.valueOf(id));
+
+
         return Jwts
                 .builder()
-                .subject(String.valueOf(id))
+                .subject(username)
                 .setClaims(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + (60 * 60 * 1000)))
@@ -40,7 +43,9 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        Long id = Long.valueOf(claims.getSubject());
+
+        String username = claims.getSubject();
+        Long id = Long.valueOf((String) claims.get("id"));
         String strRoleList = (String) claims.get("roles");
 
         String[] roleArr = strRoleList.split(",");
@@ -49,7 +54,7 @@ public class JwtUtil {
         for (String role : roleArr) {
             roleLis.add(ProfileRole.valueOf(role));
         }
-        return new JwtDto(id, roleLis);
+        return new JwtDto(id, username, roleLis);
     }
 
 

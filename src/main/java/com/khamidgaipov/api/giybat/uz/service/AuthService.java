@@ -1,5 +1,6 @@
 package com.khamidgaipov.api.giybat.uz.service;
 
+import com.khamidgaipov.api.giybat.uz.dto.AppResponse;
 import com.khamidgaipov.api.giybat.uz.dto.AuthDto;
 import com.khamidgaipov.api.giybat.uz.dto.ProfileDto;
 import com.khamidgaipov.api.giybat.uz.dto.RegistrationDto;
@@ -39,7 +40,7 @@ public class AuthService {
     @Autowired
     ProfileService profileService;
 
-    public String registration(RegistrationDto dto) {
+    public AppResponse<String> registration(RegistrationDto dto) {
         // 1. validation
         // 2. check email
         profileRepository.findByUsernameAndVisibleTrue(dto.getUsername())
@@ -63,7 +64,7 @@ public class AuthService {
         profileRoleService.create(entity.getId(), ProfileRole.ROLE_USER);
 
         sendService.sendRegEmail(dto.getUsername(), entity.getId());
-        return "Successfully registered.";
+        return new AppResponse<>("Successfully registered.");
     }
 
     public String verification(String token) {
@@ -98,7 +99,7 @@ public class AuthService {
         response.setName(profile.getName());
         response.setUsername(profile.getUsername());
         response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
-        response.setJwt(JwtUtil.encode(profile.getId(), response.getRoleList()));
+        response.setJwt(JwtUtil.encode(profile.getUsername(), profile.getId(), response.getRoleList()));
 
         return response;
     }
