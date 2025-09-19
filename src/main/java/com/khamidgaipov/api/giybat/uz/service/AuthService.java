@@ -76,6 +76,7 @@ public class AuthService {
             }
             profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
         } catch (JwtException e) {
+
         }
         return "Successfully activated!";
     }

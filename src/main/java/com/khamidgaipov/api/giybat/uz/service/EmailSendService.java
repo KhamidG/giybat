@@ -10,6 +10,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class EmailSendService {
     @Value("${spring.mail.username}")
@@ -53,7 +55,6 @@ public class EmailSendService {
                 "</html>";
         body = String.format(body, serverDomain, JwtUtil.encode(profileId));
         sendMimeMessage(email, subj, body);
-//        sendEmail(email, subj, body);
     }
 
     public void sendSimpleEmail(String email, String subject, String body) {
@@ -75,7 +76,10 @@ public class EmailSendService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(body, true);
-            sender.send(msg);
+
+            CompletableFuture.runAsync(() -> {
+                sender.send(msg);
+            });
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
