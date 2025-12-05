@@ -5,6 +5,7 @@ import com.khamidgaipov.api.giybat.uz.dto.AuthDto;
 import com.khamidgaipov.api.giybat.uz.dto.ProfileDto;
 import com.khamidgaipov.api.giybat.uz.dto.RegistrationDto;
 import com.khamidgaipov.api.giybat.uz.entity.ProfileEntity;
+import com.khamidgaipov.api.giybat.uz.enums.AppLanguage;
 import com.khamidgaipov.api.giybat.uz.enums.GeneralStatus;
 import com.khamidgaipov.api.giybat.uz.enums.ProfileRole;
 import com.khamidgaipov.api.giybat.uz.exps.AppBadException;
@@ -14,10 +15,12 @@ import com.khamidgaipov.api.giybat.uz.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -40,7 +43,10 @@ public class AuthService {
     @Autowired
     ProfileService profileService;
 
-    public AppResponse<String> registration(RegistrationDto dto) {
+    @Autowired
+    ResourceBundleMessageSource messageSource;
+
+    public AppResponse<String> registration(RegistrationDto dto, AppLanguage language) {
         // 1. validation
         // 2. check email
         profileRepository.findByUsernameAndVisibleTrue(dto.getUsername())
@@ -49,7 +55,10 @@ public class AuthService {
                         profileRoleService.deleteRoles(profileEntity.getId());
                         profileRepository.delete(profileEntity);
                     } else {
-                        throw new AppBadException("Username already exists");
+                        throw new AppBadException(
+                                messageSource.getMessage("username.exists",
+                                        null,
+                                        new Locale(language.name())));
                     }
                 });
 

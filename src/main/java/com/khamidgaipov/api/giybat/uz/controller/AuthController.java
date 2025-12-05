@@ -4,6 +4,7 @@ import com.khamidgaipov.api.giybat.uz.dto.AppResponse;
 import com.khamidgaipov.api.giybat.uz.dto.AuthDto;
 import com.khamidgaipov.api.giybat.uz.dto.ProfileDto;
 import com.khamidgaipov.api.giybat.uz.dto.RegistrationDto;
+import com.khamidgaipov.api.giybat.uz.enums.AppLanguage;
 import com.khamidgaipov.api.giybat.uz.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,9 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<AppResponse<String>> registration(@Valid @RequestBody RegistrationDto dto) {
-        return ResponseEntity.ok().body(authService.registration(dto));
+    public ResponseEntity<AppResponse<String>> registration(@Valid @RequestBody RegistrationDto dto,
+                                                            @RequestHeader("Accept-Language") AppLanguage language) {
+        return ResponseEntity.ok().body(authService.registration(dto, language));
     }
 
     @GetMapping("/registration/verification/{token}")
